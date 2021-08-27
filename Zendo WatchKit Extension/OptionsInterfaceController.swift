@@ -314,8 +314,6 @@ class OptionsInterfaceController : WKInterfaceController, BluetoothManagerStatus
                 
         default:
             print("if you are seeing this it is too late")
-            
-            //but we are going to hyjack this for the demo videos\
         
             self.animate(withDuration: 1, animations: {
                 
@@ -332,17 +330,6 @@ class OptionsInterfaceController : WKInterfaceController, BluetoothManagerStatus
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error)
     {
-        //but we are going to hyjack this for the demo videos\
-    /*
-        self.animate(withDuration: 1, animations: {
-            
-            self.authorizationButton.setHidden(true)
-            self.signinLabel.setHidden(true)
-            
-            self.donateSwitch.setEnabled(true)
-            self.progressSwitch.setEnabled(true)
-            
-        })*/
         
             let ok = WKAlertAction(title: "OK", style: .default)
             {

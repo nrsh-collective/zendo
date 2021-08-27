@@ -546,7 +546,9 @@ class Session: NSObject, SessionCommands, BluetoothManagerDataDelegate {
             
             } else
             {
-                self.zensor = Zensor(id: UUID(), name: SettingsWatch.fullName ?? "", hr: self.heartRate * 60  )
+                self.zensor = Zensor(id: appleUserUUID, name: SettingsWatch.fullName ?? "", hr: self.heartRate * 60)
+                
+                self.zensor?.update(progress: "false/0")
             }
         }
         

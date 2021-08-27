@@ -116,10 +116,6 @@ extension WatchSessionManager: WCSessionDelegate {
                                                 object: progress )
                 
             }
-            
-            else if let facebook = message["facebook"] {
-                
-            }
         }
         else if(message.first?.key == "sample")
         {

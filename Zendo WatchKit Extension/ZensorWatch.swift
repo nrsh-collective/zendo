@@ -14,8 +14,8 @@ public class Zensor : Identifiable, ObservableObject
     public var name : String
     var startDate = Date()
     
-    @Published public var hrv : String = "0.0"
-    @Published public var hr : String = "0.0"
+    @Published public var hrv = 0.0
+    @Published public var hr = 0.0
     @Published public var duration : String = "0"
     @Published public var progress : String = "true/0"
     @Published public var isMeditating : Bool = false
@@ -28,14 +28,14 @@ public class Zensor : Identifiable, ObservableObject
         
         self.id = id
         self.name = name
-        self.hr = hr.description
+        self.hr = hr
     }
     
     func update(hr: Double) {
         
         self.samples.append(hr)
         
-        self.hr = hr.rounded().description
+        self.hr = hr.rounded()
          
         self.duration = self.getDuration().description
         
@@ -43,7 +43,7 @@ public class Zensor : Identifiable, ObservableObject
                    
         self.isOutBreath = self.getOutBreath()
         
-        self.hrv = self.getHRV().description
+        self.hrv = self.getHRV()
 
         if (self.samples.count > 9 && self.samples.count % 10 == 0)
         {
@@ -149,9 +149,9 @@ public class Zensor : Identifiable, ObservableObject
         return progress
     }
     
-    func getUpdate() -> [String : String]
+    func getUpdate() -> [String : Any]
     {
-        return ["duration": self.duration, "hr" : self.hr, "hrv" : self.hrv, "meditating": self.isMeditating.description , "level": self.level.description, "game_progress" : self.progress]
+        return ["player": self.id, "duration": self.duration, "hr" : self.hr, "hrv" : self.hrv, "meditating": self.isMeditating , "level": self.level, "game_progress" : self.progress]
     }
     
     func getHRV() -> Double
@@ -166,7 +166,7 @@ public class Zensor : Identifiable, ObservableObject
         {
             (beat) -> Double in
             
-            return 1000 / beat
+            return ((1000 * 60) / beat)
         }
         
         let length = Double(rrIntervals.count)
@@ -182,28 +182,29 @@ public class Zensor : Identifiable, ObservableObject
     
     func publish()
     {
+        /*
         if let user = PFUser.current() {
             
             user.setValuesForKeys(self.getUpdate())
             
             user.saveInBackground()
             
-        }
+        }*/
         
-        /*
         let meditation = PFObject(className:"Meditation")
      
         meditation.setValuesForKeys(self.getUpdate())
         
-        meditation.saveInBackground { (succeeded, error)  in
+        meditation.saveInBackground {
+            
+            (succeeded, error)  in
+            
             if (succeeded) {
                 // The object has been saved.
             } else {
                 // There was a problem, check error.description
             }
         }
-         
-        */
     }
     
     func reset()
