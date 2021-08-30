@@ -7,8 +7,6 @@
 //
 
 import WatchConnectivity
-import Firebase
-import FirebaseDatabase
 
 class WatchSessionManager: NSObject {
     

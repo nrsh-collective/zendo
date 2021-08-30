@@ -9,15 +9,12 @@
 import UIKit
 import Hero
 import SpriteKit
-import Firebase
-import FirebaseDatabase
 import HealthKit
 import AVKit
 import Mixpanel
 import Cache
 import SwiftyJSON
 import Vision
-import XpringKit
 
 class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureFileOutputRecordingDelegate
 {

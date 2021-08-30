@@ -9,7 +9,6 @@
 //import HomeKit
 import Foundation
 import CoreBluetooth
-import FirebaseDatabase
 
 public class Zensor : NSObject, Identifiable, ObservableObject //, HMHomeManagerDelegate
 {
@@ -198,39 +197,13 @@ public class Zensor : NSObject, Identifiable, ObservableObject //, HMHomeManager
     
     func publish()
     {
-        let database = Database.database().reference()
-        let players = database.child("players")
         
-        let name = self.name.replacingOccurrences(of: ".", with: "_")
-        
-        let key = players.child(name)
-        
-        key.setValue(self.getUpdate())
-        {
-            (error, ref) in
-            
-            if let error = error
-            {
-                print("Data could not be saved: \(error).")
-                
-                return
-            }
-            
-        }
         
     }
     
     func reset()
     {
-        let database = Database.database().reference()
         
-        let players = database.child("players")
-        
-        let name = self.name.replacingOccurrences(of: ".", with: "_")
-        
-        let key = players.child(name)
-        
-        key.removeValue()
         
     }
     
