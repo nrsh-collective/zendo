@@ -273,7 +273,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                 {
                     DispatchQueue.main.async {
                         
-                        let noPlayers = SKLabelNode(text: "No one is meditating. \r\n\r\nMaybe start a session on your watch?")
+                        let noPlayers = SKLabelNode(text: "No one is meditating.")
                         noPlayers.horizontalAlignmentMode = .center
                         noPlayers.numberOfLines = 3
                         let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
@@ -282,7 +282,19 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                         noPlayers.fontSize = 18
                         noPlayers.zPosition = 3.0
                         noPlayers.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
+                        
+                        let startSession = SKLabelNode(text: "Maybe start a session on your watch?")
+                        startSession.horizontalAlignmentMode = .center
+                        startSession.numberOfLines = 3
+                        //let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
+                        startSession.color = .white
+                        startSession.fontName = fontLabel.fontName
+                        startSession.fontSize = 18
+                        startSession.zPosition = 3.0
+                        startSession.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY - 50)
+                        
                         scene.addChild(noPlayers)
+                        scene.addChild(startSession)
                         
                     }
                 }
