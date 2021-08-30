@@ -128,6 +128,10 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             
                 let userIdentifier = appleIDCredential.user
             
+            if let user = PFUser.current() {
+                
+            } else {
+            
                 PFUser.logInWithUsername(inBackground: userIdentifier, password: String(userIdentifier.prefix(9)))
                     { user, error in
                     
@@ -142,6 +146,8 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                 
                         }
                     }
+                
+            }
             
             
                 break
@@ -250,6 +256,17 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                             player.zPosition = 3.0
                             player.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
                             scene.addChild(player)
+                            
+                            let emitter = SKEmitterNode(fileNamed: "Level1Emitter")
+//                            emitter?.particleZPosition = 4.0
+                            emitter?.targetNode = player
+                            player.addChild(emitter!)
+                            
+//                            let level2Emitter = SKEmitterNode(fileNamed: "Level3Emitter")
+//                            level2Emitter?.particleZPosition = 1.5
+//                            level2Emitter?.targetNode = player
+//                            player.addChild(level2Emitter!)
+                            
                         }
                     }
                 } else
