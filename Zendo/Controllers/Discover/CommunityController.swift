@@ -230,6 +230,8 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     
     @objc func updatePlayers()
     {
+        DispatchQueue.main.async {
+            
         let scene = self.sceneView.scene!
         
         let oneMinuteAgo = Date().addingTimeInterval(-60)
@@ -263,36 +265,72 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                             let typed_level = Int(level)!
                             let typed_meditating = isMeditating.boolValue
                             
-                            let player = scene.childNode(withName: id)
-                            
-                            player?.removeAllChildren()
-                            
-                            if (typed_level >= 0) {
-                                let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
-                                emitter?.particleZPosition = 4.0
-                                emitter?.targetNode = player
-                                player?.addChild(emitter!)
+                            if let player = scene.childNode(withName: id)
+                            {
+                                player.removeAllChildren()
+                                
+                                if (typed_level >= 0) {
+                                    let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
+                                    emitter?.particleZPosition = 4.0
+                                    emitter?.targetNode = player
+                                    player.addChild(emitter!)
+                                }
+                                
+                                if(typed_level >= 1) {
+                                    let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
+                                    level1Emitter?.particleZPosition = 5.0
+                                    level1Emitter?.targetNode = player
+                                    player.addChild(level1Emitter!)
+                                }
+                                
+                                if(typed_level >= 2) {
+                                    let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
+                                    level2Emitter?.particleZPosition = 5.0
+                                    level2Emitter?.targetNode = player
+                                    
+                                    player.addChild(level2Emitter!)
+                                }
                             }
+                            else {
                             
-                            if(typed_level >= 1) {
-                                let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
-                                level1Emitter?.particleZPosition = 5.0
-                                level1Emitter?.targetNode = player
-                                player?.addChild(level1Emitter!)
+                                let player = SKSpriteNode(imageNamed: "player1")
+                                player.zPosition = 3.0
+                                player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
+                                player.name = id
+                                
+                                scene.addChild(player)
+                                
+                                
+                                if (typed_level >= 0) {
+                                    let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
+                                    emitter?.particleZPosition = 4.0
+                                    emitter?.targetNode = player
+                                    player.addChild(emitter!)
+                                }
+                                
+                                if(typed_level >= 1) {
+                                    let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
+                                    level1Emitter?.particleZPosition = 5.0
+                                    level1Emitter?.targetNode = player
+                                    player.addChild(level1Emitter!)
+                                }
+                                
+                                if(typed_level >= 2) {
+                                    let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
+                                    level2Emitter?.particleZPosition = 5.0
+                                    level2Emitter?.targetNode = player
+                                    
+                                    player.addChild(level2Emitter!)
+                                }
+                                
+                                
                             }
-                            
-                            if(typed_level >= 2) {
-                                let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
-                                level2Emitter?.particleZPosition = 5.0
-                                level2Emitter?.targetNode = player
-                                player?.addChild(level2Emitter!)
-                            }
-                            
                             
                         }
                     }
                 }
             }
+        }
         }
     }
     
@@ -334,7 +372,6 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                             let player = SKSpriteNode(imageNamed: "player1")
                             player.zPosition = 3.0
                             player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
-                            
                             player.name = id
                             scene.addChild(player)
                             
