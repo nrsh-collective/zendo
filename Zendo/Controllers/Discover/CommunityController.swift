@@ -166,7 +166,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         
     }
-
+    
     func setupPhoneAV() {
         
         UIApplication.shared.isIdleTimerDisabled = true
@@ -269,7 +269,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                                     player.updateProgress(progress: game_progress)
                                     player.zPosition = 3.0
                                     player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
-                                   
+                                    
                                     scene.addChild(player)
                                     
                                     self.currentPlayers.append(player)
@@ -317,7 +317,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                             player.updateProgress(progress: game_progress)
                             player.zPosition = 3.0
                             player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
-                           
+                            
                             scene.addChild(player)
                             
                             self.currentPlayers.append(player)
@@ -335,141 +335,153 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         self.notifyTimer = Timer.scheduledTimer(timeInterval: 10, target:self, selector: #selector(updatePlayers), userInfo: nil, repeats: true)
     }
     
-
-
-func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
-    assert(min < max)
-    return CGFloat(arc4random()) / 0xFFFFFFFF * (max - min) + min
-}
-
-func showNoPlayers()
-{
-    DispatchQueue.main.async {
-        
-        let scene = self.sceneView.scene!
-        
-        let noPlayers = SKLabelNode(text: "No one is meditating.")
-        noPlayers.horizontalAlignmentMode = .center
-        noPlayers.numberOfLines = 3
-        let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
-        noPlayers.color = .white
-        noPlayers.fontName = fontLabel.fontName
-        noPlayers.fontSize = 18
-        noPlayers.zPosition = 3.0
-        noPlayers.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
-        noPlayers.name = "no_players_label_1"
-        
-        let startSession = SKLabelNode(text: "Maybe start a session on your watch?")
-        startSession.horizontalAlignmentMode = .center
-        startSession.numberOfLines = 3
-        //let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
-        startSession.color = .white
-        startSession.fontName = fontLabel.fontName
-        startSession.fontSize = 18
-        startSession.zPosition = 3.0
-        startSession.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY - 50)
-        startSession.name = "no_players_label_2"
-        
-        scene.addChild(noPlayers)
-        scene.addChild(startSession)
-        
-    }
-}
-
-func hideNoPlayer()
-{
-    DispatchQueue.main.async {
-        
-        let scene = self.sceneView.scene!
-        
-        if let noPlayerLabel1 = scene.childNode(withName: "no_players_label_1")
-        {
-            noPlayerLabel1.removeFromParent()
-        }
-        
-        if let noPlayerLabel2 = scene.childNode(withName: "no_players_label_2")
-        {
-            noPlayerLabel2.removeFromParent()
-        }
-    }
-}
-
-func getContent(contentURL: URL, completion: @escaping (AVPlayerItem) -> Void)
-{
-    var playerItem: AVPlayerItem?
     
-    storage?.async.entry(forKey: contentURL.absoluteString, completion:
-                            {
-        result in
-        
-        switch result
-        {
-        case .value(let entry):
+    
+    func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
+        assert(min < max)
+        return CGFloat(arc4random()) / 0xFFFFFFFF * (max - min) + min
+    }
+    
+    func showNoPlayers()
+    {
+        DispatchQueue.main.async {
             
-            if var path = entry.filePath
+            let scene = self.sceneView.scene!
+            
+            let noPlayers = SKLabelNode(text: "No one is meditating.")
+            noPlayers.horizontalAlignmentMode = .center
+            noPlayers.numberOfLines = 3
+            let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
+            noPlayers.color = .white
+            noPlayers.fontName = fontLabel.fontName
+            noPlayers.fontSize = 18
+            noPlayers.zPosition = 3.0
+            noPlayers.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
+            noPlayers.name = "no_players_label_1"
+            
+            let startSession = SKLabelNode(text: "Maybe start a session on your watch?")
+            startSession.horizontalAlignmentMode = .center
+            startSession.numberOfLines = 3
+            //let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
+            startSession.color = .white
+            startSession.fontName = fontLabel.fontName
+            startSession.fontSize = 18
+            startSession.zPosition = 3.0
+            startSession.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY - 50)
+            startSession.name = "no_players_label_2"
+            
+            scene.addChild(noPlayers)
+            scene.addChild(startSession)
+            
+        }
+    }
+    
+    func hideNoPlayer()
+    {
+        DispatchQueue.main.async {
+            
+            let scene = self.sceneView.scene!
+            
+            if let noPlayerLabel1 = scene.childNode(withName: "no_players_label_1")
             {
-                if path.first == "/"
-                {
-                    path.removeFirst()
-                }
-                
-                let url = URL(fileURLWithPath: path)
-                
-                playerItem = AVPlayerItem(url: url)
+                noPlayerLabel1.removeFromParent()
             }
             
-        default:
-            
-            playerItem = AVPlayerItem(url: contentURL)
-            
-        }
-        
-        completion(playerItem!)
-        
-    })
-    
-}
-
-func startBackgroundContent(story : Story, completion: @escaping (AVPlayerItem) -> Void)
-{
-    var playerItem: AVPlayerItem?
-    
-    let streamString = story.content[0].stream
-    let downloadString = story.content[0].download
-    
-    var downloadUrl : URL?
-    var streamUrl : URL?
-    
-    if let urlString = downloadString, let url = URL(string: urlString)
-    {
-        downloadUrl = url
-    }
-    
-    if let urlString = streamString, let url = URL(string: urlString)
-    {
-        streamUrl = url
-    }
-    
-    storage?.async.entry(forKey: downloadUrl?.absoluteString ?? "", completion:
-                            {
-        result in
-        
-        switch result
-        {
-        case .value(let entry):
-            
-            if var path = entry.filePath
+            if let noPlayerLabel2 = scene.childNode(withName: "no_players_label_2")
             {
-                if path.first == "/"
+                noPlayerLabel2.removeFromParent()
+            }
+        }
+    }
+    
+    func getContent(contentURL: URL, completion: @escaping (AVPlayerItem) -> Void)
+    {
+        var playerItem: AVPlayerItem?
+        
+        storage?.async.entry(forKey: contentURL.absoluteString, completion:
+                                {
+            result in
+            
+            switch result
+            {
+            case .value(let entry):
+                
+                if var path = entry.filePath
                 {
-                    path.removeFirst()
+                    if path.first == "/"
+                    {
+                        path.removeFirst()
+                    }
+                    
+                    let url = URL(fileURLWithPath: path)
+                    
+                    playerItem = AVPlayerItem(url: url)
                 }
                 
-                let url = URL(fileURLWithPath: path)
+            default:
                 
-                playerItem = AVPlayerItem(url: url)
-            } else
+                playerItem = AVPlayerItem(url: contentURL)
+                
+            }
+            
+            completion(playerItem!)
+            
+        })
+        
+    }
+    
+    func startBackgroundContent(story : Story, completion: @escaping (AVPlayerItem) -> Void)
+    {
+        var playerItem: AVPlayerItem?
+        
+        let streamString = story.content[0].stream
+        let downloadString = story.content[0].download
+        
+        var downloadUrl : URL?
+        var streamUrl : URL?
+        
+        if let urlString = downloadString, let url = URL(string: urlString)
+        {
+            downloadUrl = url
+        }
+        
+        if let urlString = streamString, let url = URL(string: urlString)
+        {
+            streamUrl = url
+        }
+        
+        storage?.async.entry(forKey: downloadUrl?.absoluteString ?? "", completion:
+                                {
+            result in
+            
+            switch result
             {
+            case .value(let entry):
+                
+                if var path = entry.filePath
+                {
+                    if path.first == "/"
+                    {
+                        path.removeFirst()
+                    }
+                    
+                    let url = URL(fileURLWithPath: path)
+                    
+                    playerItem = AVPlayerItem(url: url)
+                } else
+                {
+                    if let url = streamUrl
+                    {
+                        playerItem = AVPlayerItem(url: url)
+                    }
+                    else
+                    {
+                        playerItem = AVPlayerItem(url: downloadUrl!)
+                    }
+                }
+                //todo: add invalid to handle a crash
+            case .error(let error):
+                
                 if let url = streamUrl
                 {
                     playerItem = AVPlayerItem(url: url)
@@ -479,132 +491,120 @@ func startBackgroundContent(story : Story, completion: @escaping (AVPlayerItem) 
                     playerItem = AVPlayerItem(url: downloadUrl!)
                 }
             }
-            //todo: add invalid to handle a crash
-        case .error(let error):
             
-            if let url = streamUrl
-            {
-                playerItem = AVPlayerItem(url: url)
-            }
-            else
-            {
-                playerItem = AVPlayerItem(url: downloadUrl!)
-            }
-        }
-        
-        completion(playerItem!)
-        
-    })
-}
-
-
-func getIntroScene() -> SKScene
-{
-    let scene = SKScene(size: (sceneView.frame.size))
-    scene.scaleMode = .resizeFill
+            completion(playerItem!)
+            
+        })
+    }
     
-    self.getContent(contentURL: URL(string: story.introURL!)!)
+    
+    func getIntroScene() -> SKScene
     {
-        item in
+        let scene = SKScene(size: (sceneView.frame.size))
+        scene.scaleMode = .resizeFill
         
-        DispatchQueue.main.async
+        self.getContent(contentURL: URL(string: story.introURL!)!)
         {
-            let videoPlayer = AVPlayer(playerItem: item)
+            item in
             
-            let video = SKVideoNode(avPlayer: videoPlayer)
-            
-            video.zPosition = 1.0
-            video.size = scene.frame.size
-            video.position = scene.position
-            video.anchorPoint = scene.anchorPoint
-            video.play()
-            scene.addChild(video)
-            
-            self.removeBackground()
-            
-            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
-                                                   object: videoPlayer.currentItem, queue: nil)
+            DispatchQueue.main.async
             {
-                notification in
+                let videoPlayer = AVPlayer(playerItem: item)
                 
-                DispatchQueue.main.async
+                let video = SKVideoNode(avPlayer: videoPlayer)
+                
+                video.zPosition = 1.0
+                video.size = scene.frame.size
+                video.position = scene.position
+                video.anchorPoint = scene.anchorPoint
+                video.play()
+                scene.addChild(video)
+                
+                self.removeBackground()
+                
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                                       object: videoPlayer.currentItem, queue: nil)
                 {
-                    videoPlayer.seek(to: kCMTimeZero)
-                    videoPlayer.play()
+                    notification in
+                    
+                    DispatchQueue.main.async
+                    {
+                        videoPlayer.seek(to: kCMTimeZero)
+                        videoPlayer.play()
+                    }
+                    
                 }
-                
-            }
-        }
-    }
-    
-    return scene
-}
-
-func getMainScene() -> SKScene
-{
-    let scene = SKScene(size: (sceneView.frame.size))
-    scene.scaleMode = .resizeFill
-    
-    sceneView.allowsTransparency = true
-    
-    self.startBackgroundContent(story: story, completion:
-                                    {
-        item in
-        
-        DispatchQueue.main.async
-        {
-            let videoPlayer = AVPlayer(playerItem: item)
-            
-            let video = SKVideoNode(avPlayer: videoPlayer)
-            
-            video.zPosition = 1.0
-            video.size = scene.frame.size
-            video.position = scene.position
-            video.anchorPoint = scene.anchorPoint
-            video.play()
-            scene.addChild(video)
-            
-            self.removeBackground()
-            
-            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
-                                                   object: videoPlayer.currentItem, queue: nil)
-            {
-                notification in
-                
-                DispatchQueue.main.async
-                {
-                    videoPlayer.seek(to: kCMTimeZero)
-                    videoPlayer.play()
-                }
-                
             }
         }
         
-    })
+        return scene
+    }
     
-    return scene
+    func getMainScene() -> SKScene
+    {
+        let scene = SKScene(size: (sceneView.frame.size))
+        scene.scaleMode = .resizeFill
+        
+        sceneView.allowsTransparency = true
+        
+        self.startBackgroundContent(story: story, completion:
+                                        {
+            item in
+            
+            DispatchQueue.main.async
+            {
+                let videoPlayer = AVPlayer(playerItem: item)
+                
+                let video = SKVideoNode(avPlayer: videoPlayer)
+                
+                video.zPosition = 1.0
+                video.size = scene.frame.size
+                video.position = scene.position
+                video.anchorPoint = scene.anchorPoint
+                video.play()
+                scene.addChild(video)
+                
+                self.removeBackground()
+                
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                                       object: videoPlayer.currentItem, queue: nil)
+                {
+                    notification in
+                    
+                    DispatchQueue.main.async
+                    {
+                        videoPlayer.seek(to: kCMTimeZero)
+                        videoPlayer.play()
+                    }
+                    
+                }
+            }
+            
+        })
+        
+        return scene
+        
+    }
     
-}
-
-
-
-func setBackground() {
-    if let story = story, let thumbnailUrl = story.thumbnailUrl, let url = URL(string: thumbnailUrl) {
-        UIImage.setImage(from: url) { image in
-            DispatchQueue.main.async {
-                self.sceneView.addBackground(image: image, isLayer: false, isReplase: false)
+    
+    
+    func setBackground() {
+        if let story = story, let thumbnailUrl = story.thumbnailUrl, let url = URL(string: thumbnailUrl) {
+            UIImage.setImage(from: url) { image in
+                DispatchQueue.main.async {
+                    self.sceneView.addBackground(image: image, isLayer: false, isReplase: false)
+                }
             }
         }
     }
-}
-
-func removeBackground()
-{
-    if let viewWithTag = self.view.viewWithTag(100) {
-        viewWithTag.removeFromSuperview()
+    
+    func removeBackground()
+    {
+        if let viewWithTag = self.view.viewWithTag(100) {
+            viewWithTag.removeFromSuperview()
+        }
     }
-}
-
+    
 }
 
 
@@ -615,9 +615,9 @@ class PlayerNode : SKSpriteNode
     let level0Emitter = SKEmitterNode(fileNamed: "Level0Emitter")!
     let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")!
     let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")!
-    //let level3Shape = ring
-    //let level4Shape = planet
-    //let level5Emitter = heart
+    let level3Ring = SKShapeNode(circleOfRadius: CGFloat(30.0))
+    let level4Planet = SKSpriteNode(imageNamed: "planet")
+    let level5Emitter = SKEmitterNode(fileNamed: "Level5Emitter")!
     
     init()
     {
@@ -632,7 +632,20 @@ class PlayerNode : SKSpriteNode
         
         level2Emitter.targetNode = self
         level2Emitter.particleZPosition = 4.0
-                         
+        
+        level3Ring.strokeColor = SKColor.zenWhite
+        level3Ring.position = CGPoint(x: self.frame.midX, y: self.frame.midX)
+        
+        level3Ring.fillColor = .clear
+        level3Ring.zPosition = 6.0
+        level3Ring.lineWidth = CGFloat(0.01)
+    
+        level4Planet.zPosition = 7.0
+        level4Planet.color = .blue
+        
+        level5Emitter.targetNode = self
+        level5Emitter.particleZPosition = 8.0
+        
     }
     
     required init?(coder: NSCoder)
@@ -648,40 +661,111 @@ class PlayerNode : SKSpriteNode
         
         switch (newLevel)
         {
-            case 0:
-                if(level0Emitter.parent == nil) {
-                    self.addChild(level0Emitter)
-                }
+        case 0:
+            if(level0Emitter.parent == nil) {
+                self.addChild(level0Emitter)
+            }
             if(level1Emitter.parent != nil) {
-                    level1Emitter.removeFromParent()
+                level1Emitter.removeFromParent()
             }
             if(level2Emitter.parent != nil) {
-                    level2Emitter.removeFromParent()
+                level2Emitter.removeFromParent()
             }
-                break
-            case 1:
+            break
+        
+        case 1:
+            
+            if(level0Emitter.parent == nil) {
+                self.addChild(level0Emitter)
+            }
+            
             if(level1Emitter.parent == nil) {
                 self.addChild(level1Emitter)
             }
-                break
-            case 2:
-            
+            break
+        
+        case 2:
+            if(level0Emitter.parent == nil) {
+                self.addChild(level0Emitter)
+            }
+            if(level1Emitter.parent == nil) {
+                self.addChild(level1Emitter)
+            }
             if(level2Emitter.parent == nil) {
                 self.addChild(level2Emitter)
             }
+            
+            break
+        case 3:
+            if(level0Emitter.parent == nil) {
+                self.addChild(level0Emitter)
+            }
+            if(level1Emitter.parent == nil) {
+                self.addChild(level1Emitter)
+            }
+            if(level2Emitter.parent == nil) {
+                self.addChild(level2Emitter)
+            }
+            if(level3Ring.parent == nil) {
+                self.addChild(level3Ring)
+            }
+            
+            
+            break
+        case 4:
+            if(level0Emitter.parent == nil) {
+                self.addChild(level0Emitter)
+            }
+            if(level1Emitter.parent == nil) {
+                self.addChild(level1Emitter)
+            }
+            if(level2Emitter.parent != nil) {
+                level2Emitter.removeFromParent()
+            }
+            if(level3Ring.parent == nil) {
+                self.addChild(level3Ring)
+            }
+            
+            if(self.level4Planet.parent == nil) {
                 
-                break
-            case 3:
-                break
-            case 4:
-                break
-            case 5:
-                break
-            default:
-                break
+                level3Ring.addChild(level4Planet)
+                let action = SKAction.repeatForever(SKAction.follow(level3Ring.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                level4Planet.run(action)
+                
+            }
+            
+            break
+        case 5:
+            if(level0Emitter.parent == nil) {
+                self.addChild(level0Emitter)
+            }
+            if(level1Emitter.parent == nil) {
+                self.addChild(level1Emitter)
+            }
+            if(level2Emitter.parent != nil) {
+                level2Emitter.removeFromParent()
+            }
+            if(level3Ring.parent == nil) {
+                self.addChild(level3Ring)
+            }
+            if(self.level4Planet.parent == nil) {
+                
+                level3Ring.addChild(level4Planet)
+                let action = SKAction.repeatForever(SKAction.follow(level3Ring.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                level4Planet.run(action)
+                
+            }
+            if(level5Emitter.parent == nil) {
+                level4Planet.addChild(level5Emitter)
+            }
+            break
+        default:
+            break
         }
         
         self.level = newLevel!
         self.isMeditating = newIsMeditating
     }
+    
+
 }

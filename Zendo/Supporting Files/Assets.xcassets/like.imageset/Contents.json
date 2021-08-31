@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "bokeh.png",
+      "filename" : "like.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "like-2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "like-3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
