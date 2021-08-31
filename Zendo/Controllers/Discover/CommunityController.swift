@@ -251,21 +251,43 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                     DispatchQueue.main.async {
                     
                         for object in objects {
-                        
+                            
+                            let id = object["player"] as? String
+                            let game_progress = object["game_progress"] as? String
+                            let typed_progress = game_progress?.components(separatedBy: "/")
+                            
+                            let isMeditating = typed_progress!.first!
+                            let level = typed_progress!.last!
+                            let typed_level = Int(level)!
+                            let typed_meditating = isMeditating.boolValue
+                            
                             let player = SKSpriteNode(imageNamed: "player1")
                             player.zPosition = 3.0
-                            player.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
+                            player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
+                            
+                            player.name = id
                             scene.addChild(player)
                             
-                            let emitter = SKEmitterNode(fileNamed: "Level1Emitter")
-//                            emitter?.particleZPosition = 4.0
-                            emitter?.targetNode = player
-                            player.addChild(emitter!)
+                            if (typed_level >= 0) {
+                                let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
+                                emitter?.particleZPosition = 4.0
+                                emitter?.targetNode = player
+                                player.addChild(emitter!)
+                            }
                             
-//                            let level2Emitter = SKEmitterNode(fileNamed: "Level3Emitter")
-//                            level2Emitter?.particleZPosition = 1.5
-//                            level2Emitter?.targetNode = player
-//                            player.addChild(level2Emitter!)
+                            if(typed_level >= 1) {
+                                let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
+                                level1Emitter?.particleZPosition = 5.0
+                                level1Emitter?.targetNode = player
+                                player.addChild(level1Emitter!)
+                            }
+                            
+                            if(typed_level >= 2) {
+                                let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
+                                level2Emitter?.particleZPosition = 5.0
+                                level2Emitter?.targetNode = player
+                                player.addChild(level2Emitter!)
+                            }
                             
                         }
                     }
@@ -301,6 +323,11 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             }
         }
         
+    }
+    
+    func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
+        assert(min < max)
+        return CGFloat(arc4random()) / 0xFFFFFFFF * (max - min) + min
     }
     
     func getContent(contentURL: URL, completion: @escaping (AVPlayerItem) -> Void)
@@ -513,5 +540,39 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             viewWithTag.removeFromSuperview()
         }
     }
+    
+}
+
+class PlayerNode : SKSpriteNode {
+    
+    override var isUserInteractionEnabled: Bool {
+        set {
+            // ignore
+        }
+        get {
+            return true
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+//            let location = touch.location(in: self)
+//
+//            let touchedNodes = self.nodes(at: location)
+//            for node in touchedNodes.reversed() {
+//                if node.name == "draggable" {
+//                    self.currentNode = node
+//                }
+//            }
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let touchLocation = touch.location(in: self)
+            self.position = touchLocation
+        }
+    }
+    
     
 }

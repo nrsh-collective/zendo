@@ -125,7 +125,7 @@
 		BE08D77426D6BB24002BEB3C /* CommunityController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE08D77226D6BB23002BEB3C /* CommunityController.storyboard */; };
 		BE08D77526D6BB24002BEB3C /* CommunityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE08D77326D6BB23002BEB3C /* CommunityController.swift */; };
 		BE08D77726D6F12D002BEB3C /* CommunityScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = BE08D77626D6F12D002BEB3C /* CommunityScene.sks */; };
-		BE08D77926D6F289002BEB3C /* Level1Emitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = BE08D77826D6F289002BEB3C /* Level1Emitter.sks */; };
+		BE08D77926D6F289002BEB3C /* Level0Emitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = BE08D77826D6F289002BEB3C /* Level0Emitter.sks */; };
 		BE0A7228209C2B83009E23AA /* OptionsInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0A7227209C2B83009E23AA /* OptionsInterfaceController.swift */; };
 		BE0B4EB2213E05AF006C3773 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0B4EB1213E05AF006C3773 /* BluetoothManager.swift */; };
 		BE0BD59D26D809DF00B81911 /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0BD59C26D809DF00B81911 /* SignInButton.swift */; };
@@ -145,10 +145,11 @@
 		BE2EEBFE24C540140067978E /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2EEBFC24C540130067978E /* ProgressView.swift */; };
 		BE2EEBFF24C540140067978E /* ProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE2EEBFD24C540140067978E /* ProgressView.xib */; };
 		BE30A47E21E4786600F8509C /* notification.json in Resources */ = {isa = PBXBuildFile; fileRef = BE30A47D21E4786600F8509C /* notification.json */; };
+		BE3199F226DDB15B00D46746 /* Level3Emitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = BE3199F126DDB15B00D46746 /* Level3Emitter.sks */; };
+		BE3199F426DDB1FF00D46746 /* flower.png in Resources */ = {isa = PBXBuildFile; fileRef = BE3199F326DDB1FF00D46746 /* flower.png */; };
 		BE3AE43621ED0ACF0019C489 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3AE43521ED0ACF0019C489 /* Notification.swift */; };
 		BE4895AC206B0CC400B007D6 /* ZazenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4895AB206B0CC400B007D6 /* ZazenController.swift */; };
 		BE50D2F220CC3BA200FF9C54 /* CommunityDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE50D2F120CC3BA200FF9C54 /* CommunityDataLoader.swift */; };
-		BE6F168D26D739D200685348 /* pngwing.com.png in Resources */ = {isa = PBXBuildFile; fileRef = BE6F168C26D739D200685348 /* pngwing.com.png */; };
 		BE73BCBE2465D5AD00EBF8DB /* GameController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE73BCBD2465D5AD00EBF8DB /* GameController.storyboard */; };
 		BE75AEBF20F708C300311512 /* ChartColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE75AEBC20F708C300311512 /* ChartColors.swift */; };
 		BE75AEC020F708C300311512 /* ChartSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE75AEBD20F708C300311512 /* ChartSeries.swift */; };
@@ -162,8 +163,9 @@
 		BE9BA64A26CD733000C16404 /* ZensorWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9BA64926CD733000C16404 /* ZensorWatch.swift */; };
 		BE9BFFFE2065F215007FF96A /* ZBFHealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9BFFFC2065EE3D007FF96A /* ZBFHealthKit.swift */; };
 		BEA398F220762F4700C85A84 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEA398F120762F4700C85A84 /* Media.xcassets */; };
+		BEA4905A26DDB75300501BD7 /* Level2Emitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = BEA4905926DDB75300501BD7 /* Level2Emitter.sks */; };
 		BEAF12EE26D726100029D10D /* pngegg-2.png in Resources */ = {isa = PBXBuildFile; fileRef = BEAF12ED26D726100029D10D /* pngegg-2.png */; };
-		BEAF12F026D726390029D10D /* Level3Emitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = BEAF12EF26D726390029D10D /* Level3Emitter.sks */; };
+		BEAF12F026D726390029D10D /* Level1Emitter.sks in Resources */ = {isa = PBXBuildFile; fileRef = BEAF12EF26D726390029D10D /* Level1Emitter.sks */; };
 		BEBAE48B20E6CDB500495C65 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEBAE48720E6CDB500495C65 /* Media.xcassets */; };
 		BEBAE48D20E6DED800495C65 /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = BEBAE48C20E6DED800495C65 /* gallery.ckcomplication */; };
 		BED56AFB21F8C0BF0027F78B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BED56AFA21F8C0BE0027F78B /* GoogleService-Info.plist */; };
@@ -388,7 +390,7 @@
 		BE08D77226D6BB23002BEB3C /* CommunityController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CommunityController.storyboard; sourceTree = "<group>"; };
 		BE08D77326D6BB23002BEB3C /* CommunityController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityController.swift; sourceTree = "<group>"; };
 		BE08D77626D6F12D002BEB3C /* CommunityScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CommunityScene.sks; sourceTree = "<group>"; };
-		BE08D77826D6F289002BEB3C /* Level1Emitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1Emitter.sks; sourceTree = "<group>"; };
+		BE08D77826D6F289002BEB3C /* Level0Emitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level0Emitter.sks; sourceTree = "<group>"; };
 		BE0A7227209C2B83009E23AA /* OptionsInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsInterfaceController.swift; sourceTree = "<group>"; };
 		BE0B4EB1213E05AF006C3773 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		BE0BD59C26D809DF00B81911 /* SignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
@@ -415,12 +417,13 @@
 		BE2EEBFC24C540130067978E /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		BE2EEBFD24C540140067978E /* ProgressView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProgressView.xib; sourceTree = "<group>"; };
 		BE30A47D21E4786600F8509C /* notification.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = notification.json; sourceTree = "<group>"; };
+		BE3199F126DDB15B00D46746 /* Level3Emitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level3Emitter.sks; sourceTree = "<group>"; };
+		BE3199F326DDB1FF00D46746 /* flower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flower.png; sourceTree = "<group>"; };
 		BE3AE43521ED0ACF0019C489 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		BE4895AB206B0CC400B007D6 /* ZazenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZazenController.swift; sourceTree = "<group>"; };
 		BE4F346522D550D60006BAAE /* Movesense.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Movesense.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE4F346722D550F90006BAAE /* libmds.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmds.a; path = "Pods/Movesense/IOS/Movesense/Release-iphoneos/libmds.a"; sourceTree = "<group>"; };
 		BE50D2F120CC3BA200FF9C54 /* CommunityDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityDataLoader.swift; sourceTree = "<group>"; };
-		BE6F168C26D739D200685348 /* pngwing.com.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pngwing.com.png; sourceTree = "<group>"; };
 		BE73BCBD2465D5AD00EBF8DB /* GameController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GameController.storyboard; sourceTree = "<group>"; };
 		BE75AEBC20F708C300311512 /* ChartColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartColors.swift; sourceTree = "<group>"; };
 		BE75AEBD20F708C300311512 /* ChartSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartSeries.swift; sourceTree = "<group>"; };
@@ -442,8 +445,9 @@
 		BE9BFFFC2065EE3D007FF96A /* ZBFHealthKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBFHealthKit.swift; sourceTree = "<group>"; };
 		BE9BFFFF2065F317007FF96A /* ZBFHealthKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZBFHealthKit.swift; sourceTree = "<group>"; };
 		BEA398F120762F4700C85A84 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		BEA4905926DDB75300501BD7 /* Level2Emitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2Emitter.sks; sourceTree = "<group>"; };
 		BEAF12ED26D726100029D10D /* pngegg-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pngegg-2.png"; sourceTree = "<group>"; };
-		BEAF12EF26D726390029D10D /* Level3Emitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level3Emitter.sks; sourceTree = "<group>"; };
+		BEAF12EF26D726390029D10D /* Level1Emitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1Emitter.sks; sourceTree = "<group>"; };
 		BEBAE48720E6CDB500495C65 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		BEBAE48C20E6DED800495C65 /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
 		BED56AFA21F8C0BE0027F78B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -557,7 +561,7 @@
 		127C3E2721788F9900B332EB /* Discover */ = {
 			isa = PBXGroup;
 			children = (
-				BE6F168C26D739D200685348 /* pngwing.com.png */,
+				BE3199F326DDB1FF00D46746 /* flower.png */,
 				BEAF12ED26D726100029D10D /* pngegg-2.png */,
 				BE08D77226D6BB23002BEB3C /* CommunityController.storyboard */,
 				BE08D77326D6BB23002BEB3C /* CommunityController.swift */,
@@ -571,8 +575,10 @@
 				12C63FF7221593B6001C93C7 /* SubscriptionViewController.swift */,
 				1226B01C2229965A00EE02F9 /* SuccessSubscriptionViewController.swift */,
 				BE08D77626D6F12D002BEB3C /* CommunityScene.sks */,
-				BE08D77826D6F289002BEB3C /* Level1Emitter.sks */,
-				BEAF12EF26D726390029D10D /* Level3Emitter.sks */,
+				BE08D77826D6F289002BEB3C /* Level0Emitter.sks */,
+				BEAF12EF26D726390029D10D /* Level1Emitter.sks */,
+				BEA4905926DDB75300501BD7 /* Level2Emitter.sks */,
+				BE3199F126DDB15B00D46746 /* Level3Emitter.sks */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -1221,19 +1227,20 @@
 				12584E5121AFF57A004DA557 /* NoInternetTableViewCell.xib in Resources */,
 				BEAF12EE26D726100029D10D /* pngegg-2.png in Resources */,
 				12C1A72A2119B75900EEFF4F /* ZenButton.xib in Resources */,
+				BE3199F226DDB15B00D46746 /* Level3Emitter.sks in Resources */,
 				1284B7B523C8D6880026B511 /* StartSessionView.xib in Resources */,
 				BE08D77726D6F12D002BEB3C /* CommunityScene.sks in Resources */,
-				BEAF12F026D726390029D10D /* Level3Emitter.sks in Resources */,
+				BEAF12F026D726390029D10D /* Level1Emitter.sks in Resources */,
 				12E2A1A7211073D600E0E911 /* Antenna-ExtraLight.otf in Resources */,
 				BE73BCBE2465D5AD00EBF8DB /* GameController.storyboard in Resources */,
 				BEBAE48D20E6DED800495C65 /* gallery.ckcomplication in Resources */,
 				12AC1A6E23C7670A00696DA5 /* PairDevices.storyboard in Resources */,
-				BE08D77926D6F289002BEB3C /* Level1Emitter.sks in Resources */,
+				BE08D77926D6F289002BEB3C /* Level0Emitter.sks in Resources */,
 				DFE3B1702189A3FA008830CD /* StartingSessions.xib in Resources */,
 				BE2E81F71FF44A7B00D104AC /* LaunchScreen.storyboard in Resources */,
 				BEF80B3825E17436006E7A3A /* PlayerParticle.sks in Resources */,
 				127C3E2921788FD300B332EB /* Discover.storyboard in Resources */,
-				BE6F168D26D739D200685348 /* pngwing.com.png in Resources */,
+				BE3199F426DDB1FF00D46746 /* flower.png in Resources */,
 				BEEA862F20D4A941003E1E1D /* Assets.xcassets in Resources */,
 				DFE3B1742189A6E5008830CD /* animationStartingSession.json in Resources */,
 				12E2A1A8211073D600E0E911 /* Antenna-Medium.otf in Resources */,
@@ -1242,6 +1249,7 @@
 				127C3E432178DB1100B332EB /* LoadingView.xib in Resources */,
 				12C2C27F2137F7F70039C7A0 /* ZenTextField.xib in Resources */,
 				12E2A1AA211073D700E0E911 /* Antenna-Regular.otf in Resources */,
+				BEA4905A26DDB75300501BD7 /* Level2Emitter.sks in Resources */,
 				BE2EEBFF24C540140067978E /* ProgressView.xib in Resources */,
 				1226B0262229A6DD00EE02F9 /* ArenaView.xib in Resources */,
 				12AC1A7323C7728D00696DA5 /* PairDevicesTableCell.xib in Resources */,
