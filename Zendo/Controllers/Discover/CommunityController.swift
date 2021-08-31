@@ -15,7 +15,6 @@ import Mixpanel
 import Cache
 import AuthenticationServices
 import Parse
-import SwiftGRPC
 
 class CommunityController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding
 {

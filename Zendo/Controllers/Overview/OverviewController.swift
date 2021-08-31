@@ -10,7 +10,6 @@ import Foundation
 import HealthKit
 import Mixpanel
 import Charts
-import XpringKit
 
 enum CurrentInterval: Int {
     case hour = 0
