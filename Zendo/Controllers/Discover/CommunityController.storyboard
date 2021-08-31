@@ -48,4 +48,9 @@
             <point key="canvasLocation" x="-186.95652173913044" y="44.196428571428569"/>
         </scene>
     </scenes>
+    <designables>
+        <designable name="ac2-Dh-OCY">
+            <size key="intrinsicContentSize" width="67" height="31"/>
+        </designable>
+    </designables>
 </document>

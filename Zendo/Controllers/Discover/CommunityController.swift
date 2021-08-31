@@ -19,6 +19,8 @@ import SwiftGRPC
 
 class CommunityController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding
 {
+    var currentPlayers = [SKSpriteNode]()
+    var notifyTimer : Timer?
     
     //#todo(debt): If we moved to SwiftUI can we get rid of some of this?
     var idHero = "" //not too sure what this does but it is store for the one of the dependencies that we have
@@ -226,6 +228,74 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
      
     }
     
+    @objc func updatePlayers()
+    {
+        let scene = self.sceneView.scene!
+        
+        let oneMinuteAgo = Date().addingTimeInterval(-60)
+        
+        let playerQuery = PFQuery(className: "Meditation")
+        playerQuery.whereKeyExists("game_progress")
+        playerQuery.whereKey("updatedAt", greaterThanOrEqualTo: oneMinuteAgo)
+        
+        playerQuery.findObjectsInBackground {
+            
+            objects, error in
+            
+            if let error = error {
+                print (error)
+            }
+            
+            if let objects = objects {
+                
+                if (objects.count > 0) {
+                
+                    DispatchQueue.main.async {
+                    
+                        for object in objects {
+                            
+                            let id = object["player"] as! String
+                            let game_progress = object["game_progress"] as! String
+                            let typed_progress = game_progress.components(separatedBy: "/")
+                            
+                            let isMeditating = typed_progress.first!
+                            let level = typed_progress.last!
+                            let typed_level = Int(level)!
+                            let typed_meditating = isMeditating.boolValue
+                            
+                            let player = scene.childNode(withName: id)
+                            
+                            player?.removeAllChildren()
+                            
+                            if (typed_level >= 0) {
+                                let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
+                                emitter?.particleZPosition = 4.0
+                                emitter?.targetNode = player
+                                player?.addChild(emitter!)
+                            }
+                            
+                            if(typed_level >= 1) {
+                                let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
+                                level1Emitter?.particleZPosition = 5.0
+                                level1Emitter?.targetNode = player
+                                player?.addChild(level1Emitter!)
+                            }
+                            
+                            if(typed_level >= 2) {
+                                let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
+                                level2Emitter?.particleZPosition = 5.0
+                                level2Emitter?.targetNode = player
+                                player?.addChild(level2Emitter!)
+                            }
+                            
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func loadPlayers()
     {
         let scene = self.sceneView.scene!
@@ -267,6 +337,8 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                             
                             player.name = id
                             scene.addChild(player)
+                            
+                            self.currentPlayers.append(player)
                             
                             if (typed_level >= 0) {
                                 let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
@@ -323,6 +395,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             }
         }
         
+        self.notifyTimer = Timer.scheduledTimer(timeInterval: 10, target:self, selector: #selector(updatePlayers), userInfo: nil, repeats: true)
     }
     
     func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
