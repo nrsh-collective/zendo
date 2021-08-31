@@ -25,7 +25,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     //#todo(debt): If we moved to SwiftUI can we get rid of some of this?
     var idHero = "" //not too sure what this does but it is store for the one of the dependencies that we have
     
-
+    
     private let diskConfig = DiskConfig(name: "DiskCache")
     private let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
     private lazy var storage: Cache.Storage<String, Data>? = {
@@ -33,7 +33,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     }()
     
     var story: Story!
-        
+    
     
     @IBOutlet weak var sceneView: SKView!
     {
@@ -81,7 +81,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         self.sceneView.alpha = CGFloat(Float(self.story.backgroundOpacity ?? "1.0") ?? 1.0)
         
         self.sceneView.layer.zPosition = 0
-
+        
         
     }
     
@@ -109,7 +109,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         super.viewDidLoad()
         
         Mixpanel.mainInstance().time(event: "phone_lab")
-
+        
         setBackground()
         
         UIApplication.shared.isIdleTimerDisabled = true
@@ -126,34 +126,34 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         
         switch authorization.credential
         {
-            case let appleIDCredential as ASAuthorizationAppleIDCredential:
+        case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
-                let userIdentifier = appleIDCredential.user
+            let userIdentifier = appleIDCredential.user
             
             if let user = PFUser.current() {
                 
             } else {
-            
-                PFUser.logInWithUsername(inBackground: userIdentifier, password: String(userIdentifier.prefix(9)))
-                    { user, error in
-                    
-                        if let user = user
-                        {
-                            print("login successful")
-                        }
-                    
-                        if let error = error {
-                            //create a new user for this AppleID
-                            print(error)
                 
-                        }
+                PFUser.logInWithUsername(inBackground: userIdentifier, password: String(userIdentifier.prefix(9)))
+                { user, error in
+                    
+                    if let user = user
+                    {
+                        print("login successful")
                     }
+                    
+                    if let error = error {
+                        //create a new user for this AppleID
+                        print(error)
+                        
+                    }
+                }
                 
             }
             
             
-                break
-        
+            break
+            
         default:
             
             print("if you are seeing this it is too late")
@@ -162,14 +162,11 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         
         self.start()
     }
-
+    
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         
     }
 
-    
-
-    
     func setupPhoneAV() {
         
         UIApplication.shared.isIdleTimerDisabled = true
@@ -183,7 +180,6 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             try? AVAudioSession.sharedInstance().setActive(true)
         }
     }
-    
     
     @objc func pan(_ gestureRecognizer : UIPanGestureRecognizer)
     {
@@ -217,120 +213,73 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     func start() {
         
         let main = self.getMainScene()
-                
+        
         self.sceneView.presentScene(nil) //don't ask, just invoke
-                
+        
         self.sceneView.presentScene(main)
-                
+        
         self.connectButton.isHidden = true
         
         self.loadPlayers()
-     
+        
     }
     
     @objc func updatePlayers()
     {
         DispatchQueue.main.async {
             
-        let scene = self.sceneView.scene!
-        
-        let oneMinuteAgo = Date().addingTimeInterval(-60)
-        
-        let playerQuery = PFQuery(className: "Meditation")
-        playerQuery.whereKeyExists("game_progress")
-        playerQuery.whereKey("updatedAt", greaterThanOrEqualTo: oneMinuteAgo)
-        
-        playerQuery.findObjectsInBackground {
+            let scene = self.sceneView.scene!
             
-            objects, error in
+            let oneMinuteAgo = Date().addingTimeInterval(-60)
             
-            if let error = error {
-                print (error)
-            }
+            let playerQuery = PFQuery(className: "Meditation")
+            playerQuery.whereKeyExists("game_progress")
+            playerQuery.whereKey("updatedAt", greaterThanOrEqualTo: oneMinuteAgo)
             
-            if let objects = objects {
+            playerQuery.findObjectsInBackground {
                 
-                if (objects.count > 0) {
+                objects, error in
                 
-                    DispatchQueue.main.async {
+                if let error = error {
+                    print (error)
+                }
+                
+                if let objects = objects {
                     
-                        for object in objects {
+                    if (objects.count > 0) {
+                        
+                        DispatchQueue.main.async {
                             
-                            let id = object["player"] as! String
-                            let game_progress = object["game_progress"] as! String
-                            let typed_progress = game_progress.components(separatedBy: "/")
+                            self.hideNoPlayer()
                             
-                            let isMeditating = typed_progress.first!
-                            let level = typed_progress.last!
-                            let typed_level = Int(level)!
-                            let typed_meditating = isMeditating.boolValue
-                            
-                            if let player = scene.childNode(withName: id)
-                            {
-                                player.removeAllChildren()
+                            for object in objects {
                                 
-                                if (typed_level >= 0) {
-                                    let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
-                                    emitter?.particleZPosition = 4.0
-                                    emitter?.targetNode = player
-                                    player.addChild(emitter!)
-                                }
+                                let id = object["player"] as! String
+                                let game_progress = object["game_progress"] as! String
                                 
-                                if(typed_level >= 1) {
-                                    let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
-                                    level1Emitter?.particleZPosition = 5.0
-                                    level1Emitter?.targetNode = player
-                                    player.addChild(level1Emitter!)
-                                }
-                                
-                                if(typed_level >= 2) {
-                                    let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
-                                    level2Emitter?.particleZPosition = 5.0
-                                    level2Emitter?.targetNode = player
+                                if let player = scene.childNode(withName: id) as? PlayerNode
+                                {
+                                    player.updateProgress(progress: game_progress)
                                     
-                                    player.addChild(level2Emitter!)
+                                }
+                                else {
+                                    
+                                    let player = PlayerNode()
+                                    player.name = id
+                                    player.updateProgress(progress: game_progress)
+                                    player.zPosition = 3.0
+                                    player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
+                                   
+                                    scene.addChild(player)
+                                    
+                                    self.currentPlayers.append(player)
+                                    
                                 }
                             }
-                            else {
-                            
-                                let player = SKSpriteNode(imageNamed: "player1")
-                                player.zPosition = 3.0
-                                player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
-                                player.name = id
-                                
-                                scene.addChild(player)
-                                
-                                
-                                if (typed_level >= 0) {
-                                    let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
-                                    emitter?.particleZPosition = 4.0
-                                    emitter?.targetNode = player
-                                    player.addChild(emitter!)
-                                }
-                                
-                                if(typed_level >= 1) {
-                                    let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
-                                    level1Emitter?.particleZPosition = 5.0
-                                    level1Emitter?.targetNode = player
-                                    player.addChild(level1Emitter!)
-                                }
-                                
-                                if(typed_level >= 2) {
-                                    let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
-                                    level2Emitter?.particleZPosition = 5.0
-                                    level2Emitter?.targetNode = player
-                                    
-                                    player.addChild(level2Emitter!)
-                                }
-                                
-                                
-                            }
-                            
                         }
                     }
                 }
             }
-        }
         }
     }
     
@@ -355,79 +304,30 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             if let objects = objects {
                 
                 if (objects.count > 0) {
-                
-                    DispatchQueue.main.async {
                     
+                    DispatchQueue.main.async {
+                        
                         for object in objects {
                             
-                            let id = object["player"] as? String
-                            let game_progress = object["game_progress"] as? String
-                            let typed_progress = game_progress?.components(separatedBy: "/")
+                            let id = object["player"] as! String
+                            let game_progress = object["game_progress"] as! String
                             
-                            let isMeditating = typed_progress!.first!
-                            let level = typed_progress!.last!
-                            let typed_level = Int(level)!
-                            let typed_meditating = isMeditating.boolValue
-                            
-                            let player = SKSpriteNode(imageNamed: "player1")
+                            let player = PlayerNode()
+                            player.name = id
+                            player.updateProgress(progress: game_progress)
                             player.zPosition = 3.0
                             player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
-                            player.name = id
+                           
                             scene.addChild(player)
                             
                             self.currentPlayers.append(player)
                             
-                            if (typed_level >= 0) {
-                                let emitter = SKEmitterNode(fileNamed: "Level0Emitter")
-                                emitter?.particleZPosition = 4.0
-                                emitter?.targetNode = player
-                                player.addChild(emitter!)
-                            }
-                            
-                            if(typed_level >= 1) {
-                                let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")
-                                level1Emitter?.particleZPosition = 5.0
-                                level1Emitter?.targetNode = player
-                                player.addChild(level1Emitter!)
-                            }
-                            
-                            if(typed_level >= 2) {
-                                let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")
-                                level2Emitter?.particleZPosition = 5.0
-                                level2Emitter?.targetNode = player
-                                player.addChild(level2Emitter!)
-                            }
-                            
                         }
                     }
-                } else
+                }
+                else
                 {
-                    DispatchQueue.main.async {
-                        
-                        let noPlayers = SKLabelNode(text: "No one is meditating.")
-                        noPlayers.horizontalAlignmentMode = .center
-                        noPlayers.numberOfLines = 3
-                        let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
-                        noPlayers.color = .white
-                        noPlayers.fontName = fontLabel.fontName
-                        noPlayers.fontSize = 18
-                        noPlayers.zPosition = 3.0
-                        noPlayers.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
-                        
-                        let startSession = SKLabelNode(text: "Maybe start a session on your watch?")
-                        startSession.horizontalAlignmentMode = .center
-                        startSession.numberOfLines = 3
-                        //let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
-                        startSession.color = .white
-                        startSession.fontName = fontLabel.fontName
-                        startSession.fontSize = 18
-                        startSession.zPosition = 3.0
-                        startSession.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY - 50)
-                        
-                        scene.addChild(noPlayers)
-                        scene.addChild(startSession)
-                        
-                    }
+                    self.showNoPlayers()
                 }
             }
         }
@@ -435,254 +335,353 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         self.notifyTimer = Timer.scheduledTimer(timeInterval: 10, target:self, selector: #selector(updatePlayers), userInfo: nil, repeats: true)
     }
     
-    func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
-        assert(min < max)
-        return CGFloat(arc4random()) / 0xFFFFFFFF * (max - min) + min
-    }
-    
-    func getContent(contentURL: URL, completion: @escaping (AVPlayerItem) -> Void)
-    {
-        var playerItem: AVPlayerItem?
-        
-        storage?.async.entry(forKey: contentURL.absoluteString, completion:
-                                {
-                                    result in
-                                    
-                                    switch result
-                                    {
-                                    case .value(let entry):
-                                        
-                                        if var path = entry.filePath
-                                        {
-                                            if path.first == "/"
-                                            {
-                                                path.removeFirst()
-                                            }
-                                            
-                                            let url = URL(fileURLWithPath: path)
-                                            
-                                            playerItem = AVPlayerItem(url: url)
-                                        }
-                                        
-                                    default:
-                                        
-                                        playerItem = AVPlayerItem(url: contentURL)
-                                        
-                                    }
-                                    
-                                    completion(playerItem!)
-                                    
-                                })
-        
-    }
-    
-    func startBackgroundContent(story : Story, completion: @escaping (AVPlayerItem) -> Void)
-    {
-        var playerItem: AVPlayerItem?
-        
-        let streamString = story.content[0].stream
-        let downloadString = story.content[0].download
-        
-        var downloadUrl : URL?
-        var streamUrl : URL?
-        
-        if let urlString = downloadString, let url = URL(string: urlString)
-        {
-            downloadUrl = url
-        }
-        
-        if let urlString = streamString, let url = URL(string: urlString)
-        {
-            streamUrl = url
-        }
-        
-        storage?.async.entry(forKey: downloadUrl?.absoluteString ?? "", completion:
-                                {
-                                    result in
-                                    
-                                    switch result
-                                    {
-                                    case .value(let entry):
-                                        
-                                        if var path = entry.filePath
-                                        {
-                                            if path.first == "/"
-                                            {
-                                                path.removeFirst()
-                                            }
-                                            
-                                            let url = URL(fileURLWithPath: path)
-                                            
-                                            playerItem = AVPlayerItem(url: url)
-                                        } else
-                                        {
-                                            if let url = streamUrl
-                                            {
-                                                playerItem = AVPlayerItem(url: url)
-                                            }
-                                            else
-                                            {
-                                                playerItem = AVPlayerItem(url: downloadUrl!)
-                                            }
-                                        }
-                                    //todo: add invalid to handle a crash
-                                    case .error(let error):
-                                        
-                                        if let url = streamUrl
-                                        {
-                                            playerItem = AVPlayerItem(url: url)
-                                        }
-                                        else
-                                        {
-                                            playerItem = AVPlayerItem(url: downloadUrl!)
-                                        }
-                                    }
-                                    
-                                    completion(playerItem!)
-                                    
-                                })
-    }
-    
-    
-    func getIntroScene() -> SKScene
-    {
-        let scene = SKScene(size: (sceneView.frame.size))
-        scene.scaleMode = .resizeFill
-        
-        self.getContent(contentURL: URL(string: story.introURL!)!)
-        {
-            item in
-            
-            DispatchQueue.main.async
-            {
-                let videoPlayer = AVPlayer(playerItem: item)
-                
-                let video = SKVideoNode(avPlayer: videoPlayer)
-                
-                video.zPosition = 1.0
-                video.size = scene.frame.size
-                video.position = scene.position
-                video.anchorPoint = scene.anchorPoint
-                video.play()
-                scene.addChild(video)
-                
-                self.removeBackground()
-                
-                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
-                                                       object: videoPlayer.currentItem, queue: nil)
-                {
-                    notification in
-                    
-                    DispatchQueue.main.async
-                    {
-                        videoPlayer.seek(to: kCMTimeZero)
-                        videoPlayer.play()
-                    }
-                    
-                }
-            }
-        }
-        
-        return scene
-    }
-    
-    func getMainScene() -> SKScene
-    {
-        let scene = SKScene(size: (sceneView.frame.size))
-        scene.scaleMode = .resizeFill
-        
-        sceneView.allowsTransparency = true
-        
-        self.startBackgroundContent(story: story, completion:
-                                        {
-                                            item in
-                                            
-                                            DispatchQueue.main.async
-                                            {
-                                                let videoPlayer = AVPlayer(playerItem: item)
-                                                
-                                                let video = SKVideoNode(avPlayer: videoPlayer)
-                                                
-                                                video.zPosition = 1.0
-                                                video.size = scene.frame.size
-                                                video.position = scene.position
-                                                video.anchorPoint = scene.anchorPoint
-                                                video.play()
-                                                scene.addChild(video)
-                                                
-                                                self.removeBackground()
-                                                
-                                                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
-                                                                                       object: videoPlayer.currentItem, queue: nil)
-                                                {
-                                                    notification in
-                                                    
-                                                    DispatchQueue.main.async
-                                                    {
-                                                        videoPlayer.seek(to: kCMTimeZero)
-                                                        videoPlayer.play()
-                                                    }
-                                                    
-                                                }
-                                            }
-                                            
-                                        })
-        
-        return scene
-        
-    }
-    
 
+
+func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
+    assert(min < max)
+    return CGFloat(arc4random()) / 0xFFFFFFFF * (max - min) + min
+}
+
+func showNoPlayers()
+{
+    DispatchQueue.main.async {
+        
+        let scene = self.sceneView.scene!
+        
+        let noPlayers = SKLabelNode(text: "No one is meditating.")
+        noPlayers.horizontalAlignmentMode = .center
+        noPlayers.numberOfLines = 3
+        let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
+        noPlayers.color = .white
+        noPlayers.fontName = fontLabel.fontName
+        noPlayers.fontSize = 18
+        noPlayers.zPosition = 3.0
+        noPlayers.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
+        noPlayers.name = "no_players_label_1"
+        
+        let startSession = SKLabelNode(text: "Maybe start a session on your watch?")
+        startSession.horizontalAlignmentMode = .center
+        startSession.numberOfLines = 3
+        //let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
+        startSession.color = .white
+        startSession.fontName = fontLabel.fontName
+        startSession.fontSize = 18
+        startSession.zPosition = 3.0
+        startSession.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY - 50)
+        startSession.name = "no_players_label_2"
+        
+        scene.addChild(noPlayers)
+        scene.addChild(startSession)
+        
+    }
+}
+
+func hideNoPlayer()
+{
+    DispatchQueue.main.async {
+        
+        let scene = self.sceneView.scene!
+        
+        if let noPlayerLabel1 = scene.childNode(withName: "no_players_label_1")
+        {
+            noPlayerLabel1.removeFromParent()
+        }
+        
+        if let noPlayerLabel2 = scene.childNode(withName: "no_players_label_2")
+        {
+            noPlayerLabel2.removeFromParent()
+        }
+    }
+}
+
+func getContent(contentURL: URL, completion: @escaping (AVPlayerItem) -> Void)
+{
+    var playerItem: AVPlayerItem?
     
-    func setBackground() {
-        if let story = story, let thumbnailUrl = story.thumbnailUrl, let url = URL(string: thumbnailUrl) {
-            UIImage.setImage(from: url) { image in
-                DispatchQueue.main.async {
-                    self.sceneView.addBackground(image: image, isLayer: false, isReplase: false)
+    storage?.async.entry(forKey: contentURL.absoluteString, completion:
+                            {
+        result in
+        
+        switch result
+        {
+        case .value(let entry):
+            
+            if var path = entry.filePath
+            {
+                if path.first == "/"
+                {
+                    path.removeFirst()
                 }
+                
+                let url = URL(fileURLWithPath: path)
+                
+                playerItem = AVPlayerItem(url: url)
             }
+            
+        default:
+            
+            playerItem = AVPlayerItem(url: contentURL)
+            
         }
-    }
-    
-    func removeBackground()
-    {
-        if let viewWithTag = self.view.viewWithTag(100) {
-            viewWithTag.removeFromSuperview()
-        }
-    }
+        
+        completion(playerItem!)
+        
+    })
     
 }
 
-class PlayerNode : SKSpriteNode {
+func startBackgroundContent(story : Story, completion: @escaping (AVPlayerItem) -> Void)
+{
+    var playerItem: AVPlayerItem?
     
-    override var isUserInteractionEnabled: Bool {
-        set {
-            // ignore
+    let streamString = story.content[0].stream
+    let downloadString = story.content[0].download
+    
+    var downloadUrl : URL?
+    var streamUrl : URL?
+    
+    if let urlString = downloadString, let url = URL(string: urlString)
+    {
+        downloadUrl = url
+    }
+    
+    if let urlString = streamString, let url = URL(string: urlString)
+    {
+        streamUrl = url
+    }
+    
+    storage?.async.entry(forKey: downloadUrl?.absoluteString ?? "", completion:
+                            {
+        result in
+        
+        switch result
+        {
+        case .value(let entry):
+            
+            if var path = entry.filePath
+            {
+                if path.first == "/"
+                {
+                    path.removeFirst()
+                }
+                
+                let url = URL(fileURLWithPath: path)
+                
+                playerItem = AVPlayerItem(url: url)
+            } else
+            {
+                if let url = streamUrl
+                {
+                    playerItem = AVPlayerItem(url: url)
+                }
+                else
+                {
+                    playerItem = AVPlayerItem(url: downloadUrl!)
+                }
+            }
+            //todo: add invalid to handle a crash
+        case .error(let error):
+            
+            if let url = streamUrl
+            {
+                playerItem = AVPlayerItem(url: url)
+            }
+            else
+            {
+                playerItem = AVPlayerItem(url: downloadUrl!)
+            }
         }
-        get {
-            return true
+        
+        completion(playerItem!)
+        
+    })
+}
+
+
+func getIntroScene() -> SKScene
+{
+    let scene = SKScene(size: (sceneView.frame.size))
+    scene.scaleMode = .resizeFill
+    
+    self.getContent(contentURL: URL(string: story.introURL!)!)
+    {
+        item in
+        
+        DispatchQueue.main.async
+        {
+            let videoPlayer = AVPlayer(playerItem: item)
+            
+            let video = SKVideoNode(avPlayer: videoPlayer)
+            
+            video.zPosition = 1.0
+            video.size = scene.frame.size
+            video.position = scene.position
+            video.anchorPoint = scene.anchorPoint
+            video.play()
+            scene.addChild(video)
+            
+            self.removeBackground()
+            
+            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                                   object: videoPlayer.currentItem, queue: nil)
+            {
+                notification in
+                
+                DispatchQueue.main.async
+                {
+                    videoPlayer.seek(to: kCMTimeZero)
+                    videoPlayer.play()
+                }
+                
+            }
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first {
-//            let location = touch.location(in: self)
-//
-//            let touchedNodes = self.nodes(at: location)
-//            for node in touchedNodes.reversed() {
-//                if node.name == "draggable" {
-//                    self.currentNode = node
-//                }
-//            }
+    return scene
+}
+
+func getMainScene() -> SKScene
+{
+    let scene = SKScene(size: (sceneView.frame.size))
+    scene.scaleMode = .resizeFill
+    
+    sceneView.allowsTransparency = true
+    
+    self.startBackgroundContent(story: story, completion:
+                                    {
+        item in
+        
+        DispatchQueue.main.async
+        {
+            let videoPlayer = AVPlayer(playerItem: item)
+            
+            let video = SKVideoNode(avPlayer: videoPlayer)
+            
+            video.zPosition = 1.0
+            video.size = scene.frame.size
+            video.position = scene.position
+            video.anchorPoint = scene.anchorPoint
+            video.play()
+            scene.addChild(video)
+            
+            self.removeBackground()
+            
+            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                                   object: videoPlayer.currentItem, queue: nil)
+            {
+                notification in
+                
+                DispatchQueue.main.async
+                {
+                    videoPlayer.seek(to: kCMTimeZero)
+                    videoPlayer.play()
+                }
+                
+            }
+        }
+        
+    })
+    
+    return scene
+    
+}
+
+
+
+func setBackground() {
+    if let story = story, let thumbnailUrl = story.thumbnailUrl, let url = URL(string: thumbnailUrl) {
+        UIImage.setImage(from: url) { image in
+            DispatchQueue.main.async {
+                self.sceneView.addBackground(image: image, isLayer: false, isReplase: false)
+            }
         }
     }
+}
+
+func removeBackground()
+{
+    if let viewWithTag = self.view.viewWithTag(100) {
+        viewWithTag.removeFromSuperview()
+    }
+}
+
+}
+
+
+class PlayerNode : SKSpriteNode
+{
+    var level: Int = 0
+    var isMeditating : Bool = false
+    let level0Emitter = SKEmitterNode(fileNamed: "Level0Emitter")!
+    let level1Emitter = SKEmitterNode(fileNamed: "Level1Emitter")!
+    let level2Emitter = SKEmitterNode(fileNamed: "Level2Emitter")!
+    //let level3Shape = ring
+    //let level4Shape = planet
+    //let level5Emitter = heart
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first {
-            let touchLocation = touch.location(in: self)
-            self.position = touchLocation
-        }
+    init()
+    {
+        let texture = SKTexture(imageNamed: "player1")
+        super.init(texture: texture, color: .clear, size: texture.size())
+        
+        level0Emitter.targetNode = self
+        level0Emitter.particleZPosition = 4.0
+        
+        level1Emitter.targetNode = self
+        level1Emitter.particleZPosition = 5.0
+        
+        level2Emitter.targetNode = self
+        level2Emitter.particleZPosition = 4.0
+                         
     }
     
+    required init?(coder: NSCoder)
+    {
+        super.init(coder: coder)
+    }
     
+    func updateProgress(progress: String)
+    {
+        let typed_progress = progress.components(separatedBy: "/")
+        let newIsMeditating = typed_progress.first!.boolValue
+        let newLevel = Int(typed_progress.last!)
+        
+        switch (newLevel)
+        {
+            case 0:
+                if(level0Emitter.parent == nil) {
+                    self.addChild(level0Emitter)
+                }
+            if(level1Emitter.parent != nil) {
+                    level1Emitter.removeFromParent()
+            }
+            if(level2Emitter.parent != nil) {
+                    level2Emitter.removeFromParent()
+            }
+                break
+            case 1:
+            if(level1Emitter.parent == nil) {
+                self.addChild(level1Emitter)
+            }
+                break
+            case 2:
+            
+            if(level2Emitter.parent == nil) {
+                self.addChild(level2Emitter)
+            }
+                
+                break
+            case 3:
+                break
+            case 4:
+                break
+            case 5:
+                break
+            default:
+                break
+        }
+        
+        self.level = newLevel!
+        self.isMeditating = newIsMeditating
+    }
 }
