@@ -223,122 +223,87 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         
     }
     
-    @objc func updatePlayers()
+    @objc func loadPlayers()
     {
-        DispatchQueue.main.async {
-            
-            let scene = self.sceneView.scene!
-            
-            let oneMinuteAgo = Date().addingTimeInterval(-60)
-            
-            let playerQuery = PFQuery(className: "Meditation")
-            playerQuery.whereKeyExists("game_progress")
-            playerQuery.whereKey("updatedAt", greaterThanOrEqualTo: oneMinuteAgo)
-            
-            playerQuery.findObjectsInBackground {
-                
-                objects, error in
-                
-                if let error = error {
-                    print (error)
-                }
-                
-                if let objects = objects {
-                    
-                    if (objects.count > 0) {
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.hideNoPlayer()
-                            
-                            for object in objects {
-                                
-                                let id = object["player"] as! String
-                                let game_progress = object["game_progress"] as! String
-                                
-                                if let player = scene.childNode(withName: id) as? PlayerNode
-                                {
-                                    player.updateProgress(progress: game_progress)
-                                    
-                                }
-                                else {
-                                    
-                                    let player = PlayerNode()
-                                    player.name = id
-                                    player.updateProgress(progress: game_progress)
-                                    player.zPosition = 3.0
-                                    player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
-                                    
-                                    scene.addChild(player)
-                                    
-                                    self.currentPlayers.append(player)
-                                    
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    func loadPlayers()
-    {
-        let scene = self.sceneView.scene!
-        
         let oneMinuteAgo = Date().addingTimeInterval(-60)
-        
         let playerQuery = PFQuery(className: "Meditation")
         playerQuery.whereKeyExists("game_progress")
         playerQuery.whereKey("updatedAt", greaterThanOrEqualTo: oneMinuteAgo)
         
-        playerQuery.findObjectsInBackground {
-            
+        playerQuery.findObjectsInBackground
+        {
             objects, error in
             
-            if let error = error {
+            if let error = error
+            {
                 print (error)
             }
-            
-            if let objects = objects {
                 
-                if (objects.count > 0) {
-                    
-                    DispatchQueue.main.async {
+            if let objects = objects
+            {
+                if (objects.count > 0)
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.hideNoPlayer()
+                        
+                        let scene = self.sceneView.scene!
+                        
+                        var index = 1
+                        
+                        var player : PlayerNode?
                         
                         for object in objects {
                             
                             let id = object["player"] as! String
                             let game_progress = object["game_progress"] as! String
                             
-                            let player = PlayerNode()
-                            player.name = id
-                            player.updateProgress(progress: game_progress)
-                            player.zPosition = 3.0
-                            player.position = CGPoint(x: self.randomRange(scene.frame.minX, scene.frame.maxX) , y: self.randomRange(scene.frame.minY, scene.frame.maxY))
+                            if let player = scene.childNode(withName: id) as? PlayerNode
+                            {
+                                player.updateProgress(progress: game_progress)
+                                
+                            }
+                            else
+                            {
+                                player = PlayerNode()
+                                player?.name = id
+                                player?.updateProgress(progress: game_progress)
+                                player?.zPosition = 3.0
+                                scene.addChild(player!)
+                                self.currentPlayers.append(player!)
+                                
+                            }
+                        
+                            if(index == 1)
+                            {
+                                player?.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
+                            }
+                            else
+                            {
+                                let radians = 3.1415 * 2
+                                let arc = radians / Double(objects.count)
+                                let angle = arc * Double(index - 1)
+                                let x = Double(scene.frame.midX) + 150 * cos(angle)
+                                let y = Double(scene.frame.midY) + 150 * sin(angle)
+                                    
+                                player?.position = CGPoint(x: x, y: y)
+                            }
                             
-                            scene.addChild(player)
-                            
-                            self.currentPlayers.append(player)
-                            
+                            index = index + 1
                         }
                     }
                 }
                 else
                 {
+                    self.sceneView.scene!.removeChildren(in: self.currentPlayers)
                     self.showNoPlayers()
                 }
             }
         }
-        
-        self.notifyTimer = Timer.scheduledTimer(timeInterval: 10, target:self, selector: #selector(updatePlayers), userInfo: nil, repeats: true)
-    }
-    
-    
-    
-    func randomRange(_ min: CGFloat, _ max: CGFloat) -> CGFloat {
-        assert(min < max)
-        return CGFloat(arc4random()) / 0xFFFFFFFF * (max - min) + min
+        if(self.notifyTimer == nil)
+        {
+            self.notifyTimer = Timer.scheduledTimer(timeInterval: 10, target:self, selector: #selector(loadPlayers), userInfo: nil, repeats: true)
+        }
     }
     
     func showNoPlayers()
@@ -377,19 +342,16 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     
     func hideNoPlayer()
     {
-        DispatchQueue.main.async {
-            
-            let scene = self.sceneView.scene!
-            
-            if let noPlayerLabel1 = scene.childNode(withName: "no_players_label_1")
-            {
-                noPlayerLabel1.removeFromParent()
-            }
-            
-            if let noPlayerLabel2 = scene.childNode(withName: "no_players_label_2")
-            {
-                noPlayerLabel2.removeFromParent()
-            }
+        let scene = self.sceneView.scene!
+        
+        if let noPlayerLabel1 = scene.childNode(withName: "no_players_label_1")
+        {
+            noPlayerLabel1.removeFromParent()
+        }
+        
+        if let noPlayerLabel2 = scene.childNode(withName: "no_players_label_2")
+        {
+            noPlayerLabel2.removeFromParent()
         }
     }
     
