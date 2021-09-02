@@ -24,7 +24,6 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     //#todo(debt): If we moved to SwiftUI can we get rid of some of this?
     var idHero = "" //not too sure what this does but it is store for the one of the dependencies that we have
     
-    
     private let diskConfig = DiskConfig(name: "DiskCache")
     private let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
     private lazy var storage: Cache.Storage<String, Data>? = {
@@ -74,10 +73,6 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     override func viewDidLayoutSubviews() {
         
         super.viewDidLayoutSubviews()
-        
-        self.sceneView.frame = self.view.frame
-        
-        self.sceneView.alpha = CGFloat(Float(self.story.backgroundOpacity ?? "1.0") ?? 1.0)
         
         self.sceneView.layer.zPosition = 0
         
@@ -174,7 +169,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         
         do {
             
-            try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .mixWithOthers)
+            try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers)
             
             try? AVAudioSession.sharedInstance().setActive(true)
         }
@@ -238,12 +233,12 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             {
                 print (error)
             }
-                
+            
             if let objects = objects
             {
-                if (objects.count > 0)
+                DispatchQueue.main.async
                 {
-                    DispatchQueue.main.async
+                    if (objects.count > 0)
                     {
                         self.hideNoPlayer()
                         
@@ -273,7 +268,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                                 self.currentPlayers.append(player!)
                                 
                             }
-                        
+                            
                             if(index == 1)
                             {
                                 player?.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
@@ -285,21 +280,22 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
                                 let angle = arc * Double(index - 1)
                                 let x = Double(scene.frame.midX) + 150 * cos(angle)
                                 let y = Double(scene.frame.midY) + 150 * sin(angle)
-                                    
+                                
                                 player?.position = CGPoint(x: x, y: y)
                             }
                             
                             index = index + 1
                         }
                     }
-                }
-                else
-                {
-                    self.sceneView.scene!.removeChildren(in: self.currentPlayers)
-                    self.showNoPlayers()
+                    else
+                    {
+                        self.sceneView.scene!.removeChildren(in: self.currentPlayers)
+                        self.showNoPlayers()
+                    }
                 }
             }
         }
+        
         if(self.notifyTimer == nil)
         {
             self.notifyTimer = Timer.scheduledTimer(timeInterval: 10, target:self, selector: #selector(loadPlayers), userInfo: nil, repeats: true)
@@ -308,9 +304,10 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
     
     func showNoPlayers()
     {
-        DispatchQueue.main.async {
-            
-            let scene = self.sceneView.scene!
+        let scene = self.sceneView.scene!
+        
+        if scene.childNode(withName: "no_players_label_1") == nil
+        {
             
             let noPlayers = SKLabelNode(text: "No one is meditating.")
             noPlayers.horizontalAlignmentMode = .center
@@ -323,20 +320,23 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
             noPlayers.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY)
             noPlayers.name = "no_players_label_1"
             
+            scene.addChild(noPlayers)
+        }
+        
+        if scene.childNode(withName: "no_players_label_2") == nil
+        {
             let startSession = SKLabelNode(text: "Maybe start a session on your watch?")
             startSession.horizontalAlignmentMode = .center
             startSession.numberOfLines = 3
-            //let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
+            let fontLabel = UIFont.zendo(font: .antennaRegular, size: 14)
             startSession.color = .white
             startSession.fontName = fontLabel.fontName
             startSession.fontSize = 18
             startSession.zPosition = 3.0
             startSession.position = CGPoint(x: scene.frame.midX , y: scene.frame.midY - 50)
             startSession.name = "no_players_label_2"
-            
-            scene.addChild(noPlayers)
+    
             scene.addChild(startSession)
-            
         }
     }
     
@@ -544,12 +544,10 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
         })
         
         return scene
-        
     }
     
-    
-    
-    func setBackground() {
+    func setBackground()
+    {
         if let story = story, let thumbnailUrl = story.thumbnailUrl, let url = URL(string: thumbnailUrl) {
             UIImage.setImage(from: url) { image in
                 DispatchQueue.main.async {
@@ -569,7 +567,7 @@ class CommunityController: UIViewController, ASAuthorizationControllerDelegate, 
 }
 
 
-class PlayerNode : SKSpriteNode
+class PlayerNodeOld : SKSpriteNode
 {
     var level: Int = 0
     var isMeditating : Bool = false
@@ -600,7 +598,7 @@ class PlayerNode : SKSpriteNode
         level3Ring.fillColor = .clear
         level3Ring.zPosition = 6.0
         level3Ring.lineWidth = CGFloat(0.01)
-    
+        
         level4Planet.zPosition = 7.0
         level4Planet.color = .blue
         
@@ -633,7 +631,7 @@ class PlayerNode : SKSpriteNode
                 level2Emitter.removeFromParent()
             }
             break
-        
+            
         case 1:
             
             if(level0Emitter.parent == nil) {
@@ -644,7 +642,7 @@ class PlayerNode : SKSpriteNode
                 self.addChild(level1Emitter)
             }
             break
-        
+            
         case 2:
             if(level0Emitter.parent == nil) {
                 self.addChild(level0Emitter)
@@ -727,6 +725,200 @@ class PlayerNode : SKSpriteNode
         self.level = newLevel!
         self.isMeditating = newIsMeditating
     }
-    
-
 }
+    
+    class PlayerNode : SKSpriteNode
+    {
+        var level: Int = 0
+        var isMeditating : Bool = false
+        
+        let fieldEmitter = SKEmitterNode(fileNamed: "Level0Emitter")!
+        let starEmitter = SKEmitterNode(fileNamed: "Level1Emitter")!
+        let ring1 = SKShapeNode(circleOfRadius: CGFloat(20.0))
+        let ring2 = SKShapeNode(circleOfRadius: CGFloat(40.0))
+        let ring3 = SKShapeNode(circleOfRadius: CGFloat(60.0))
+        let planet1 = SKSpriteNode(imageNamed: "planet")
+        let planet2 = SKSpriteNode(imageNamed: "planet")
+        let planet3 = SKSpriteNode(imageNamed: "planet")
+        let heartEmitter = SKEmitterNode(fileNamed: "Level5Emitter")!
+
+        init()
+        {
+            let texture = SKTexture(imageNamed: "player1")
+            super.init(texture: texture, color: .clear, size: texture.size())
+            
+            fieldEmitter.targetNode = self
+            fieldEmitter.particleZPosition = 4.0
+            
+            starEmitter.targetNode = self
+            starEmitter.particleZPosition = 5.0
+            
+            ring1.strokeColor = SKColor.zenWhite
+            ring1.position = CGPoint(x: self.frame.midX, y: self.frame.midX)
+            ring1.fillColor = .clear
+            ring1.zPosition = 6.0
+            ring1.lineWidth = CGFloat(0.01)
+            
+            ring2.strokeColor = SKColor.zenWhite
+            ring2.position = CGPoint(x: self.frame.midX, y: self.frame.midX)
+            ring2.fillColor = .clear
+            ring2.zPosition = 6.0
+            ring2.lineWidth = CGFloat(0.01)
+            
+            ring3.strokeColor = SKColor.zenWhite
+            ring3.position = CGPoint(x: self.frame.midX, y: self.frame.midX)
+            ring3.fillColor = .clear
+            ring3.zPosition = 6.0
+            ring3.lineWidth = CGFloat(0.01)
+                        
+            heartEmitter.targetNode = self
+            heartEmitter.particleZPosition = 8.0
+            
+        }
+        
+        required init?(coder: NSCoder)
+        {
+            super.init(coder: coder)
+        }
+        
+        func updateProgress(progress: String)
+        {
+            let typed_progress = progress.components(separatedBy: "/")
+            let newIsMeditating = typed_progress.first!.boolValue
+            let newLevel = Int(typed_progress.last!)
+            
+            switch (newLevel)
+            {
+                case 0:
+                    if(fieldEmitter.parent == nil) {
+                        self.addChild(fieldEmitter)
+                    }
+                    if(starEmitter.parent != nil) {
+                        starEmitter.removeFromParent()
+                    }
+                    if(ring1.parent != nil) {
+                        ring1.removeFromParent()
+                    }
+                    if(ring2.parent != nil) {
+                        ring2.removeFromParent()
+                    }
+                    if(ring3.parent != nil) {
+                        ring3.removeFromParent()
+                    }
+                    break
+                
+                case 1:
+                    
+                    if(fieldEmitter.parent == nil) {
+                        self.addChild(fieldEmitter)
+                    }
+                    
+                    if(starEmitter.parent == nil) {
+                        self.addChild(starEmitter)
+                    }
+                    break
+                
+            case 2:
+                    if(fieldEmitter.parent == nil) {
+                        self.addChild(fieldEmitter)
+                    }
+                    if(starEmitter.parent == nil) {
+                        self.addChild(starEmitter)
+                    }
+                    if(ring1.parent == nil) {
+                        self.addChild(ring1)
+                        ring1.addChild(planet1)
+                        let action = SKAction.repeatForever(SKAction.follow(ring1.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                        planet1.run(action)
+                    }
+                
+                break
+            case 3:
+                if(fieldEmitter.parent == nil) {
+                    self.addChild(fieldEmitter)
+                }
+                if(starEmitter.parent == nil) {
+                    self.addChild(starEmitter)
+                }
+                if(ring1.parent == nil) {
+                    self.addChild(ring1)
+                    ring1.addChild(planet1)
+                    let action = SKAction.repeatForever(SKAction.follow(ring1.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet1.run(action)
+                }
+                if(ring2.parent == nil) {
+                    self.addChild(ring2)
+                    ring1.addChild(planet2)
+                    let action = SKAction.repeatForever(SKAction.follow(ring2.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet2.run(action)
+                }
+                
+                
+                break
+            case 4:
+                if(fieldEmitter.parent == nil) {
+                    self.addChild(fieldEmitter)
+                }
+                if(starEmitter.parent == nil) {
+                    self.addChild(starEmitter)
+                }
+                if(ring1.parent == nil) {
+                    self.addChild(ring1)
+                    ring1.addChild(planet1)
+                    let action = SKAction.repeatForever(SKAction.follow(ring1.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet1.run(action)
+                }
+                if(ring2.parent == nil) {
+                    self.addChild(ring2)
+                    ring1.addChild(planet2)
+                    let action = SKAction.repeatForever(SKAction.follow(ring2.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet2.run(action)
+                }
+                
+                if(ring3.parent == nil) {
+                    self.addChild(ring3)
+                    ring3.addChild(planet3)
+                    let action = SKAction.repeatForever(SKAction.follow(ring3.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet3.run(action)
+                }
+                
+                break
+            case 5:
+                if(fieldEmitter.parent == nil) {
+                    self.addChild(fieldEmitter)
+                }
+                if(starEmitter.parent == nil) {
+                    self.addChild(starEmitter)
+                }
+                if(ring1.parent == nil) {
+                    self.addChild(ring1)
+                    ring1.addChild(planet1)
+                    let action = SKAction.repeatForever(SKAction.follow(ring1.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet1.run(action)
+                }
+                if(ring2.parent == nil) {
+                    self.addChild(ring2)
+                    ring1.addChild(planet2)
+                    let action = SKAction.repeatForever(SKAction.follow(ring2.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet2.run(action)
+                }
+                
+                if(ring3.parent == nil) {
+                    self.addChild(ring3)
+                    ring3.addChild(planet3)
+                    let action = SKAction.repeatForever(SKAction.follow(ring3.path!, asOffset: false, orientToPath: true, speed: 15.0))
+                    planet3.run(action)
+                }
+                if(heartEmitter.parent == nil) {
+                    planet3.addChild(heartEmitter)
+                }
+                break
+            default:
+                break
+            }
+            
+            self.level = newLevel!
+            self.isMeditating = newIsMeditating
+        }
+
+    }

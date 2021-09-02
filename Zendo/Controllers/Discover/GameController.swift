@@ -247,7 +247,7 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         do {
             
-            try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .mixWithOthers)
+            try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers)
             
             try? AVAudioSession.sharedInstance().setActive(true)
         }
@@ -678,6 +678,9 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func getIntroScene() -> SKScene
     {
         let scene = SKScene(size: (sceneView.frame.size))
+        
+        //let scene = SKScene(size: (UIScreen.main.bounds.size))
+        
         scene.scaleMode = .resizeFill
         
         self.getContent(contentURL: URL(string: story.introURL!)!)
@@ -696,6 +699,7 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 video.anchorPoint = scene.anchorPoint
                 video.play()
                 scene.addChild(video)
+                
                 
                 self.removeBackground()
                 
