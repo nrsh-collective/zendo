@@ -71,9 +71,9 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Add Zendō data to Apple Health </string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app doesn&apos;t use location, so if you so this, there is a problem.</string>
+	<string>This app doesn't use location, so if you so this, there is a problem.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app doesn&apos;t use location, so if you so this, there is a problem.</string>
+	<string>This app doesn't use location, so if you so this, there is a problem.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Record meditations</string>
 	<key>NSMotionUsageDescription</key>

@@ -93,6 +93,11 @@ class SummaryInterfaceController: WKInterfaceController {
         if SettingsWatch.isFirstSession {
             WKInterfaceController.reloadRootControllers(withNamesAndContexts: [(name: "AppInterfaceController", context: session as AnyObject), (name: "OptionsInterfaceController", context: session as AnyObject)])
         } else {
+            
+            //todo: think the easest path to add the timer is to repurope the meditation goal feature
+            //that means that this needa to move to start on the first session, rather than its summary
+            //lets go see where we are make this change on the other side.
+            
             SettingsWatch.isFirstSession = true
             WKInterfaceController.reloadRootControllers(withNamesAndContexts: [(name: "SetGoalInterfaceController", context: session as AnyObject)])
         }

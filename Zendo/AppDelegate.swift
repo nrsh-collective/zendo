@@ -26,7 +26,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         WatchSessionManager.sharedManager.startSession()
         
-        UINavigationBar.appearance().barStyle = .black
+       
+        
+        if #available(iOS 15.0, *) {
+            let navigationBarAppearance = UINavigationBarAppearance()
+            navigationBarAppearance.configureWithTransparentBackground()
+            navigationBarAppearance.titleTextAttributes = [.font: UIFont.zendo(font: .antennaMedium, size: 24.0), .foregroundColor: UIColor.white]
+            
+            //navigationBarAppearance.titleTextAttributes = [.font: UIFont.zendo(font: .antennaRegular, size: 14.0), .foregroundColor: UIColor.white]
+            
+            navigationBarAppearance.backgroundColor = UIColor.zenDarkGreen
+            
+            UINavigationBar.appearance().standardAppearance =  navigationBarAppearance
+            UINavigationBar.appearance().compactAppearance = navigationBarAppearance
+            UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+        }
+        
+        //UINavigationBar.appearance().barStyle = .black
         UINavigationBar.appearance().barTintColor = UIColor.zenDarkGreen
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().isTranslucent = false
